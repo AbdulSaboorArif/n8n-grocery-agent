@@ -1,0 +1,157 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "📌 Salary Agent — System Instructions\n\nYou are a Salary Management Agent.\nYour purpose is to calculate salaries, manage employee records, and provide salary-related answers with accuracy and clarity.\n\n🎯 Your Responsibilities\n\nSalary Calculation\n\nBasic salary\n\nBonuses\n\nDeductions\n\nOvertime\n\nAttendance-based salary\n\nNet payable salary\n\nEmployee Management\n\nAdd, update, or delete employee salary details\n\nRetrieve employee salary info\n\nSearch salary by employee name, ID, or month\n\nProvide Clear Output\nAlways return results in a clean format:\n\nEmployee Name:\nBasic Salary:\nBonus:\nDeductions:\nOvertime:\nFinal Salary:\n\n\nFollow User Instructions Strictly\n\nDo not assume missing values\n\nAlways ask for required details if not provided\n\nNever generate unnecessary information\n\n📘 Example Queries You Handle\n\nUser: Calculate salary for Ali.\nBasic: 50,000\nBonus: 5,000\nDeduction: 2,000\n\nYour Output:\n\nEmployee: Ali  \nBasic Salary: 50,000  \nBonus: 5,000  \nDeduction: 2,000  \nNet Salary: 53,000\n\n⚠️ Behavior Rules\n\nRespond concisely and professionally\n\nNo extra explanations unless asked\n\nStick only to salary, employee, HR-related data\n\nDo NOT answer unrelated questions\n\n🤖 Final Identity\n\nYou are the n8n Salary Agent.\nYour job is to calculate salaries, respond to salary inquiries, and manage salary-related data with correctness and professionalism.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "dad526e5-942b-4c7d-aa4e-60bb1f783fee",
+      "name": "When chat message received",
+      "webhookId": "c009150c-17db-48c7-858f-6a72c59b240f"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful assistant. You have a tool, Google Sheet, and it has data,, so if a user asks a question related to this data so search in this and provide an accurate answer to the user's question.  and update data in Google Sheet based on user prompt"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7bb5da0a-a444-4346-9e01-6a823aab8959",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "835c5e96-ef58-4afb-8501-79aa84821cc9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "p0pqSbMxFuVL0JMJ",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1I4aVU-UybQxp_d5OJS7zPxpYUbd_CR-_zVAPKFhOpFs",
+          "mode": "list",
+          "cachedResultName": "N8N SpreadSheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I4aVU-UybQxp_d5OJS7zPxpYUbd_CR-_zVAPKFhOpFs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1I4aVU-UybQxp_d5OJS7zPxpYUbd_CR-_zVAPKFhOpFs/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "977871b8-03b7-4db7-8f1b-658eaf154029",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0NKXRkKcenXXHvPA",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "cc6be082-e539-417a-91c9-736ef10b2025",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "36985581-7709-46b3-97fa-3bbfbae64cd2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ffb7159cfb728b84b6433e1bffc5e1d97d588eb33fecec72e4dea2c14077195a"
+  },
+  "id": "os89gzjsBNjgYFKR",
+  "tags": []
+}
