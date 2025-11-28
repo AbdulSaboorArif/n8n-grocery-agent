@@ -8,6 +8,7 @@ echo "🚀 Starting n8n on Render.com..."
 # Wait a moment for environment to be ready
 sleep 2
 
+
 # Set webhook URL dynamically
 if [ -n "$RENDER_EXTERNAL_URL" ]; then
     export WEBHOOK_URL="$RENDER_EXTERNAL_URL"
