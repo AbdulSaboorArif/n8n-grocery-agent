@@ -48,3 +48,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s \
 
 # Start n8n using startup script
 CMD ["/home/node/start.sh"]
+
